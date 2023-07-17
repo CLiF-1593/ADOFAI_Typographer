@@ -1,11 +1,12 @@
 #pragma once
 #include <SDL.h>
 
-#define CLR_STD_BACKGROUND  20, 20, 20, 255
+#define CLR_STD_BACKGROUND  24, 24, 24, 255
 #define CLR_STD_TEXT		250, 250, 250, 255
 #define CLR_SUB_TEXT		170, 170, 170, 255
-#define CLR_MENU_BACKGROUND 32, 32, 32, 255
-#define CLR_STD_BORDER		100, 100, 100, 255
+#define CLR_COMP_BACKGROUND 32, 32, 32, 255
+#define CLR_SCREEN_BACKGROUND 18, 18, 18, 255
+#define CLR_STD_BORDER		48, 48, 48, 255
 #define CLR_WINDOW_THEME	Color::WindowsSTD::GetThemeColor().r, Color::WindowsSTD::GetThemeColor().g, Color::WindowsSTD::GetThemeColor().b, 255
 
 namespace Color {

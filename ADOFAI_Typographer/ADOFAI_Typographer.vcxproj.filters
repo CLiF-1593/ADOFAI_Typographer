@@ -93,6 +93,18 @@
     <ClCompile Include="MenuComponent.cpp">
       <Filter>Source Files\Scenes\MainScene Components</Filter>
     </ClCompile>
+    <ClCompile Include="SettingComponent.cpp">
+      <Filter>Source Files\Scenes\MainScene Components</Filter>
+    </ClCompile>
+    <ClCompile Include="ScreenComponent.cpp">
+      <Filter>Source Files\Scenes\MainScene Components</Filter>
+    </ClCompile>
+    <ClCompile Include="MotionListComponent.cpp">
+      <Filter>Source Files\Scenes\MainScene Components</Filter>
+    </ClCompile>
+    <ClCompile Include="TimelineComponent.cpp">
+      <Filter>Source Files\Scenes\MainScene Components</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Config.h">
@@ -137,7 +149,7 @@
     <ClInclude Include="Component.h">
       <Filter>Header Files\Scenes</Filter>
     </ClInclude>
-    <ClInclude Include="TypoStatus.h">
+    <ClInclude Include="SoftwareStatus.h">
       <Filter>Header Files\Typo</Filter>
     </ClInclude>
     <ClInclude Include="MenuComponent.h">
@@ -145,6 +157,18 @@
     </ClInclude>
     <ClInclude Include="resource.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SettingComponent.h">
+      <Filter>Header Files\Scenes\MainScene Components</Filter>
+    </ClInclude>
+    <ClInclude Include="ScreenComponent.h">
+      <Filter>Header Files\Scenes\MainScene Components</Filter>
+    </ClInclude>
+    <ClInclude Include="MotionListComponent.h">
+      <Filter>Header Files\Scenes\MainScene Components</Filter>
+    </ClInclude>
+    <ClInclude Include="TimelineComponent.h">
+      <Filter>Header Files\Scenes\MainScene Components</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -6,6 +6,7 @@
 #include "Scene.h"
 #include "IntroScene.h"
 #include "Color.h"
+#include "SoftwareStatus.h"
 using namespace std;
 
 int main(int argc, char *argv[]) {
@@ -17,7 +18,7 @@ int main(int argc, char *argv[]) {
 	UI_Window win;
 	SDL_Event evt;
 	Scene *scene = new IntroScene(&win);
-	while (true) {
+	while (SoftwareStatus::run) {
 		if (Status::IsRenderingOnlyEventOccured()) SDL_WaitEvent(&evt);
 		else SDL_PollEvent(&evt);
 		if (evt.type == SDL_QUIT) break;

@@ -15,6 +15,15 @@
 		- info : credit, how to use, github
 */
 
+#define menu_comp_font_size 30
+
+#define menu_comp_width (this->win->GetWidth())
+#define menu_comp_height 40
+
+#define menu_comp_margin 10
+
+#define menu_comp_selector_width 200
+
 class MenuComponent : public Component {
 private:
 	SDL_Texture* logo;

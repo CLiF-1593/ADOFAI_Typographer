@@ -9,7 +9,7 @@ UI_Window::UI_Window() {
 	this->win = SDL_CreateWindow("ADOFAI Typographer", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1280, 720, SDL_WINDOW_HIDDEN | SDL_WINDOW_RESIZABLE);
 	this->ren = SDL_CreateRenderer(this->win, -1, SDL_RENDERER_ACCELERATED);
 	//SDL_SetWindowBordered(this->win, SDL_FALSE);
-	SDL_SetWindowMinimumSize(this->win, 640, 360);
+	SDL_SetWindowMinimumSize(this->win, 960, 540);
 	SDL_SysWMinfo wmInfo;
 	SDL_VERSION(&wmInfo.version);
 	SDL_GetWindowWMInfo(this->win, &wmInfo);

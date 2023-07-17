@@ -1,94 +1,88 @@
 #include "MenuComponent.h"
 #include "Texture.h"
-#include "TypoStatus.h"
+#include "SoftwareStatus.h"
 #include "Log.h"
 
-const int menu_font_size = 30;
-const int menu_height = 40;
-
-const int margin = 10;
-
-const int menu_selector_width = 200;
-
 MenuComponent::MenuComponent(UI_Window* win) : Component(win) {
+
 	this->activated_menu = NONE;
 
 	this->logo = Texture::LoadImage("software_logo.img", this->win->GetRenderer());
-	this->motion_editor_title = Texture::LoadText(":: Motion Editor", this->win->GetRenderer(), menu_font_size, "main", Color::RGB(CLR_SUB_TEXT));
-	this->typo_editor_title = Texture::LoadText(":: Typography Editor", this->win->GetRenderer(), menu_font_size, "main", Color::RGB(CLR_SUB_TEXT));
+	this->motion_editor_title = Texture::LoadText(":: Motion Editor", this->win->GetRenderer(), menu_comp_font_size, "main", Color::RGB(CLR_SUB_TEXT));
+	this->typo_editor_title = Texture::LoadText(":: Typography Editor", this->win->GetRenderer(), menu_comp_font_size, "main", Color::RGB(CLR_SUB_TEXT));
 
-	int x = (menu_height - menu_font_size) / 2;
-	x += menu_font_size;
-	int y = (menu_height - menu_font_size) / 2;
-	x += margin;
+	int x = (menu_comp_height - menu_comp_font_size) / 2;
+	x += menu_comp_font_size;
+	int y = (menu_comp_height - menu_comp_font_size) / 2;
+	x += menu_comp_margin;
 
-	this->btn_file = new Button("File", this->win->GetRenderer(), menu_font_size, x, y);
-	x += this->btn_file->GetRect().w + margin;
-	this->btn_edit = new Button("Edit", this->win->GetRenderer(), menu_font_size, x, y);
-	x += this->btn_edit->GetRect().w + margin;
-	this->btn_mode = new Button("Mode", this->win->GetRenderer(), menu_font_size, x, y);
-	x += this->btn_mode->GetRect().w + margin;
-	this->btn_object = new Button("Object", this->win->GetRenderer(), menu_font_size, x, y);
-	this->btn_motion = new Button("Motion", this->win->GetRenderer(), menu_font_size, x, y);
-	x += max(this->btn_object->GetRect().w, this->btn_motion->GetRect().w) + margin;
-	this->btn_render = new Button("Render", this->win->GetRenderer(), menu_font_size, x, y);
-	x += this->btn_render->GetRect().w + margin;
-	this->btn_preview = new Button("Preview", this->win->GetRenderer(), menu_font_size, x, y);
-	x += this->btn_preview->GetRect().w + margin;
-	this->btn_info = new Button("Info", this->win->GetRenderer(), menu_font_size, x, y);
+	this->btn_file = new Button("File", this->win->GetRenderer(), menu_comp_font_size, x, y);
+	x += this->btn_file->GetRect().w + menu_comp_margin;
+	this->btn_edit = new Button("Edit", this->win->GetRenderer(), menu_comp_font_size, x, y);
+	x += this->btn_edit->GetRect().w + menu_comp_margin;
+	this->btn_mode = new Button("Mode", this->win->GetRenderer(), menu_comp_font_size, x, y);
+	x += this->btn_mode->GetRect().w + menu_comp_margin;
+	this->btn_object = new Button("Object", this->win->GetRenderer(), menu_comp_font_size, x, y);
+	this->btn_motion = new Button("Motion", this->win->GetRenderer(), menu_comp_font_size, x, y);
+	x += max(this->btn_object->GetRect().w, this->btn_motion->GetRect().w) + menu_comp_margin;
+	this->btn_render = new Button("Render", this->win->GetRenderer(), menu_comp_font_size, x, y);
+	x += this->btn_render->GetRect().w + menu_comp_margin;
+	this->btn_preview = new Button("Preview", this->win->GetRenderer(), menu_comp_font_size, x, y);
+	x += this->btn_preview->GetRect().w + menu_comp_margin;
+	this->btn_info = new Button("Info", this->win->GetRenderer(), menu_comp_font_size, x, y);
 
-	y = menu_height + margin;
-	this->selection_file_new = new Button("New", this->win->GetRenderer(), menu_font_size, this->btn_file->GetRect().x + margin, y);
+	y = menu_comp_height + menu_comp_margin;
+	this->selection_file_new = new Button("New", this->win->GetRenderer(), menu_comp_font_size, this->btn_file->GetRect().x + menu_comp_margin, y);
 	y += this->selection_file_new->GetRect().h;
-	this->selection_file_open = new Button("Open", this->win->GetRenderer(), menu_font_size, this->btn_file->GetRect().x + margin, y);
+	this->selection_file_open = new Button("Open", this->win->GetRenderer(), menu_comp_font_size, this->btn_file->GetRect().x + menu_comp_margin, y);
 	y += this->selection_file_new->GetRect().h;
-	this->selection_file_save = new Button("Save", this->win->GetRenderer(), menu_font_size, this->btn_file->GetRect().x + margin, y);
+	this->selection_file_save = new Button("Save", this->win->GetRenderer(), menu_comp_font_size, this->btn_file->GetRect().x + menu_comp_margin, y);
 	y += this->selection_file_new->GetRect().h;
-	this->selection_file_save_as = new Button("Save As", this->win->GetRenderer(), menu_font_size, this->btn_file->GetRect().x + margin, y);
+	this->selection_file_save_as = new Button("Save As", this->win->GetRenderer(), menu_comp_font_size, this->btn_file->GetRect().x + menu_comp_margin, y);
 	y += this->selection_file_new->GetRect().h;
-	this->selection_file_exit = new Button("Exit", this->win->GetRenderer(), menu_font_size, this->btn_file->GetRect().x + margin, y);
+	this->selection_file_exit = new Button("Exit", this->win->GetRenderer(), menu_comp_font_size, this->btn_file->GetRect().x + menu_comp_margin, y);
 
-	y = menu_height + margin;
-	this->selection_edit_undo = new Button("Undo", this->win->GetRenderer(), menu_font_size, this->btn_edit->GetRect().x + margin, y);
+	y = menu_comp_height + menu_comp_margin;
+	this->selection_edit_undo = new Button("Undo", this->win->GetRenderer(), menu_comp_font_size, this->btn_edit->GetRect().x + menu_comp_margin, y);
 	y += this->selection_file_new->GetRect().h;
-	this->selection_edit_redo = new Button("Redo", this->win->GetRenderer(), menu_font_size, this->btn_edit->GetRect().x + margin, y);
+	this->selection_edit_redo = new Button("Redo", this->win->GetRenderer(), menu_comp_font_size, this->btn_edit->GetRect().x + menu_comp_margin, y);
 	y += this->selection_file_new->GetRect().h;
-	this->selection_edit_cut = new Button("Cut", this->win->GetRenderer(), menu_font_size, this->btn_edit->GetRect().x + margin, y);
+	this->selection_edit_cut = new Button("Cut", this->win->GetRenderer(), menu_comp_font_size, this->btn_edit->GetRect().x + menu_comp_margin, y);
 	y += this->selection_file_new->GetRect().h;
-	this->selection_edit_copy = new Button("Copy", this->win->GetRenderer(), menu_font_size, this->btn_edit->GetRect().x + margin, y);
+	this->selection_edit_copy = new Button("Copy", this->win->GetRenderer(), menu_comp_font_size, this->btn_edit->GetRect().x + menu_comp_margin, y);
 	y += this->selection_file_new->GetRect().h;
-	this->selection_edit_paste = new Button("Paste", this->win->GetRenderer(), menu_font_size, this->btn_edit->GetRect().x + margin, y);
+	this->selection_edit_paste = new Button("Paste", this->win->GetRenderer(), menu_comp_font_size, this->btn_edit->GetRect().x + menu_comp_margin, y);
 	y += this->selection_file_new->GetRect().h;
-	this->selection_edit_delete = new Button("Delete", this->win->GetRenderer(), menu_font_size, this->btn_edit->GetRect().x + margin, y);
+	this->selection_edit_delete = new Button("Delete", this->win->GetRenderer(), menu_comp_font_size, this->btn_edit->GetRect().x + menu_comp_margin, y);
 
-	y = menu_height + margin;
-	this->selection_mode_typo_editor = new Button("Typo Editor", this->win->GetRenderer(), menu_font_size, this->btn_mode->GetRect().x + margin, y);
+	y = menu_comp_height + menu_comp_margin;
+	this->selection_mode_typo_editor = new Button("Typo Editor", this->win->GetRenderer(), menu_comp_font_size, this->btn_mode->GetRect().x + menu_comp_margin, y);
 	y += this->selection_file_new->GetRect().h;
-	this->selection_mode_motion_editor = new Button("Motion Editor", this->win->GetRenderer(), menu_font_size, this->btn_mode->GetRect().x + margin, y);
+	this->selection_mode_motion_editor = new Button("Motion Editor", this->win->GetRenderer(), menu_comp_font_size, this->btn_mode->GetRect().x + menu_comp_margin, y);
 
-	y = menu_height + margin;
-	this->selection_object_add_text = new Button("Add Text", this->win->GetRenderer(), menu_font_size, this->btn_object->GetRect().x + margin, y);
+	y = menu_comp_height + menu_comp_margin;
+	this->selection_object_add_text = new Button("Add Text", this->win->GetRenderer(), menu_comp_font_size, this->btn_object->GetRect().x + menu_comp_margin, y);
 	y += this->selection_file_new->GetRect().h;
-	this->selection_object_add_image = new Button("Add Image", this->win->GetRenderer(), menu_font_size, this->btn_object->GetRect().x + margin, y);
+	this->selection_object_add_image = new Button("Add Image", this->win->GetRenderer(), menu_comp_font_size, this->btn_object->GetRect().x + menu_comp_margin, y);
 	y += this->selection_file_new->GetRect().h;
-	this->selection_object_add_box = new Button("Add Box", this->win->GetRenderer(), menu_font_size, this->btn_object->GetRect().x + margin, y);
+	this->selection_object_add_box = new Button("Add Box", this->win->GetRenderer(), menu_comp_font_size, this->btn_object->GetRect().x + menu_comp_margin, y);
 	y += this->selection_file_new->GetRect().h;
 
-	y = menu_height + margin;
-	this->selection_motion_new_motion = new Button("New Motion", this->win->GetRenderer(), menu_font_size, this->btn_motion->GetRect().x + margin, y);
+	y = menu_comp_height + menu_comp_margin;
+	this->selection_motion_new_motion = new Button("New Motion", this->win->GetRenderer(), menu_comp_font_size, this->btn_motion->GetRect().x + menu_comp_margin, y);
 	y += this->selection_file_new->GetRect().h;
-	this->selection_motion_export_motion = new Button("Export Motion", this->win->GetRenderer(), menu_font_size, this->btn_motion->GetRect().x + margin, y);
+	this->selection_motion_export_motion = new Button("Export Motion", this->win->GetRenderer(), menu_comp_font_size, this->btn_motion->GetRect().x + menu_comp_margin, y);
 	y += this->selection_file_new->GetRect().h;
-	this->selection_motion_import_motion = new Button("Import Motion", this->win->GetRenderer(), menu_font_size, this->btn_motion->GetRect().x + margin, y);
+	this->selection_motion_import_motion = new Button("Import Motion", this->win->GetRenderer(), menu_comp_font_size, this->btn_motion->GetRect().x + menu_comp_margin, y);
 	y += this->selection_file_new->GetRect().h;
-	this->selection_motion_change_motion_name = new Button("Change Motion Name", this->win->GetRenderer(), menu_font_size, this->btn_motion->GetRect().x + margin, y);
+	this->selection_motion_change_motion_name = new Button("Change Motion Name", this->win->GetRenderer(), menu_comp_font_size, this->btn_motion->GetRect().x + menu_comp_margin, y);
 
-	y = menu_height + margin;
-	this->selection_info_credit = new Button("Credit", this->win->GetRenderer(), menu_font_size, this->btn_info->GetRect().x + margin, y);
+	y = menu_comp_height + menu_comp_margin;
+	this->selection_info_credit = new Button("Credit", this->win->GetRenderer(), menu_comp_font_size, this->btn_info->GetRect().x + menu_comp_margin, y);
 	y += this->selection_file_new->GetRect().h;
-	this->selection_info_how_to_use = new Button("How to Use", this->win->GetRenderer(), menu_font_size, this->btn_info->GetRect().x + margin, y);
+	this->selection_info_how_to_use = new Button("How to Use", this->win->GetRenderer(), menu_comp_font_size, this->btn_info->GetRect().x + menu_comp_margin, y);
 	y += this->selection_file_new->GetRect().h;
-	this->selection_info_github = new Button("Github", this->win->GetRenderer(), menu_font_size, this->btn_info->GetRect().x + margin, y);
+	this->selection_info_github = new Button("Github", this->win->GetRenderer(), menu_comp_font_size, this->btn_info->GetRect().x + menu_comp_margin, y);
 }
 
 MenuComponent::~MenuComponent() {
@@ -109,39 +103,39 @@ void MenuComponent::Rendering() {
 	rect.x = 0;
 	rect.y = 0;
 	rect.w = this->win->GetWidth();
-	rect.h = menu_height;
-	SDL_SetRenderDrawColor(this->win->GetRenderer(), CLR_MENU_BACKGROUND);
+	rect.h = menu_comp_height;
+	SDL_SetRenderDrawColor(this->win->GetRenderer(), CLR_COMP_BACKGROUND);
 	SDL_RenderFillRect(this->win->GetRenderer(), &rect);
 	rect.h = 1;
 	SDL_SetRenderDrawColor(this->win->GetRenderer(), CLR_STD_BORDER);
 	SDL_RenderFillRect(this->win->GetRenderer(), &rect);
-	rect.y = menu_height;
+	rect.y = menu_comp_height;
 	rect.h = 2;
 	SDL_SetRenderDrawColor(this->win->GetRenderer(), CLR_WINDOW_THEME);
 	SDL_RenderFillRect(this->win->GetRenderer(), &rect);
 	
-	rect.x = (menu_height - menu_font_size) / 2;
-	rect.y = (menu_height - menu_font_size) / 2;
-	rect.w = menu_font_size;
-	rect.h = menu_font_size;
+	rect.x = (menu_comp_height - menu_comp_font_size) / 2;
+	rect.y = (menu_comp_height - menu_comp_font_size) / 2;
+	rect.w = menu_comp_font_size;
+	rect.h = menu_comp_font_size;
 	SDL_RenderCopy(this->win->GetRenderer(), this->logo, NULL, &rect);
-	rect.x = this->win->GetWidth() - (menu_height - menu_font_size) / 2;
+	rect.x = this->win->GetWidth() - (menu_comp_height - menu_comp_font_size) / 2;
 	SDL_Texture* title;
-	if(TypoStatus::software_mode == TypoStatus::MOTION_EDITOR) title = this->motion_editor_title;
+	if(SoftwareStatus::software_mode == SoftwareStatus::MOTION_EDITOR) title = this->motion_editor_title;
 	else title = this->typo_editor_title;
 	SDL_QueryTexture(title, NULL, NULL, &rect.w, &rect.h);
 	rect.x -= rect.w;
 	SDL_RenderCopy(this->win->GetRenderer(), title, NULL, &rect);
 	/*
-	rect.x += rect.w + margin;
-	rect.w = margin;
+	rect.x += rect.w + menu_comp_margin;
+	rect.w = menu_comp_margin;
 	SDL_RenderFillRect(this->win->GetRenderer(), &rect);
 	*/
 
 	this->btn_file->Render();
 	this->btn_edit->Render();
 	this->btn_mode->Render();
-	if (TypoStatus::software_mode == TypoStatus::MOTION_EDITOR) 
+	if (SoftwareStatus::software_mode == SoftwareStatus::MOTION_EDITOR) 
 		this->btn_motion->Render();
 	else this->btn_object->Render();
 	this->btn_render->Render();
@@ -160,12 +154,12 @@ void MenuComponent::Rendering() {
 			default: rect.x = 0; break;
 		}
 		if (rect.x) {
-			rect.w = menu_selector_width;
-			rect.y = menu_height;
+			rect.w = menu_comp_selector_width;
+			rect.y = menu_comp_height;
 			rect.h *= this->selection_file_new->GetRect().h;
-			rect.h += margin * 2;
+			rect.h += menu_comp_margin * 2;
 
-			SDL_SetRenderDrawColor(this->win->GetRenderer(), CLR_MENU_BACKGROUND);
+			SDL_SetRenderDrawColor(this->win->GetRenderer(), CLR_COMP_BACKGROUND);
 			SDL_RenderFillRect(this->win->GetRenderer(), &rect);
 			SDL_SetRenderDrawColor(this->win->GetRenderer(), CLR_STD_BORDER);
 			SDL_RenderDrawRect(this->win->GetRenderer(), &rect);
@@ -216,7 +210,7 @@ void MenuComponent::EventProcess(SDL_Event* evt) {
 	this->btn_file->EventProcess(evt);
 	this->btn_edit->EventProcess(evt);
 	this->btn_mode->EventProcess(evt);
-	if (TypoStatus::software_mode == TypoStatus::MOTION_EDITOR)
+	if (SoftwareStatus::software_mode == SoftwareStatus::MOTION_EDITOR)
 		this->btn_motion->EventProcess(evt);
 	else this->btn_object->EventProcess(evt);
 	this->btn_render->EventProcess(evt);
@@ -301,10 +295,10 @@ void MenuComponent::EventProcess(SDL_Event* evt) {
 			default: rect.x = 0; break;
 			}
 			if (rect.x) {
-				rect.w = menu_selector_width;
-				rect.y = menu_height;
+				rect.w = menu_comp_selector_width;
+				rect.y = menu_comp_height;
 				rect.h *= this->selection_file_new->GetRect().h;
-				rect.h += margin * 2;
+				rect.h += menu_comp_margin * 2;
 
 				if (evt->button.x < rect.x || evt->button.x > rect.x + rect.w || evt->button.y < rect.y || evt->button.y > rect.y + rect.h) {
 					this->activated_menu = NONE;
@@ -314,41 +308,46 @@ void MenuComponent::EventProcess(SDL_Event* evt) {
 	}
 
 	// Menu Selection Process
+	bool selector_clicked = false;
 	switch (this->activated_menu) {
 	case FILE:
-		this->selection_file_new->IsClicked();
-		this->selection_file_open->IsClicked();
-		this->selection_file_save->IsClicked();
-		this->selection_file_save_as->IsClicked();
-		this->selection_file_exit->IsClicked();
+		if (this->selection_file_new->IsClicked()) selector_clicked = true;
+		if (this->selection_file_open->IsClicked()) selector_clicked = true;
+		if (this->selection_file_save->IsClicked()) selector_clicked = true;
+		if (this->selection_file_save_as->IsClicked()) selector_clicked = true;
+		if (this->selection_file_exit->IsClicked()) SoftwareStatus::run = false, selector_clicked = true;
 		break;
 	case EDIT:
-		this->selection_edit_undo->IsClicked();
-		this->selection_edit_redo->IsClicked();
-		this->selection_edit_cut->IsClicked();
-		this->selection_edit_copy->IsClicked();
-		this->selection_edit_paste->IsClicked();
-		this->selection_edit_delete->IsClicked();
+		if (this->selection_edit_undo->IsClicked()) selector_clicked = true;
+		if (this->selection_edit_redo->IsClicked()) selector_clicked = true;
+		if (this->selection_edit_cut->IsClicked()) selector_clicked = true;
+		if (this->selection_edit_copy->IsClicked()) selector_clicked = true;
+		if (this->selection_edit_paste->IsClicked()) selector_clicked = true;
+		if (this->selection_edit_delete->IsClicked()) selector_clicked = true;
 		break;
 	case MODE:
-		if(this->selection_mode_typo_editor->IsClicked()) TypoStatus::software_mode = TypoStatus::TYPO_EDITOR;
-		if(this->selection_mode_motion_editor->IsClicked()) TypoStatus::software_mode = TypoStatus::MOTION_EDITOR;
+		if (this->selection_mode_typo_editor->IsClicked()) SoftwareStatus::software_mode = SoftwareStatus::TYPO_EDITOR, selector_clicked = true;
+		if (this->selection_mode_motion_editor->IsClicked()) SoftwareStatus::software_mode = SoftwareStatus::MOTION_EDITOR, selector_clicked = true;
 		break;
 	case OBJECT:
-		this->selection_object_add_text->IsClicked();
-		this->selection_object_add_image->IsClicked();
-		this->selection_object_add_box->IsClicked();
+		if (this->selection_object_add_text->IsClicked()) selector_clicked = true;
+		if (this->selection_object_add_image->IsClicked()) selector_clicked = true;
+		if (this->selection_object_add_box->IsClicked()) selector_clicked = true;
 		break;
 	case MOTION:
-		this->selection_motion_new_motion->IsClicked();
-		this->selection_motion_export_motion->IsClicked();
-		this->selection_motion_import_motion->IsClicked();
-		this->selection_motion_change_motion_name->IsClicked();
+		if (this->selection_motion_new_motion->IsClicked()) selector_clicked = true;
+		if (this->selection_motion_export_motion->IsClicked()) selector_clicked = true;
+		if (this->selection_motion_import_motion->IsClicked()) selector_clicked = true;
+		if (this->selection_motion_change_motion_name->IsClicked()) selector_clicked = true;
 		break;
 	case INFO:
-		this->selection_info_credit->IsClicked();
-		this->selection_info_how_to_use->IsClicked();
-		this->selection_info_github->IsClicked();
+		if (this->selection_info_credit->IsClicked()) selector_clicked = true;
+		if (this->selection_info_how_to_use->IsClicked()) selector_clicked = true;
+		if (this->selection_info_github->IsClicked()) system("explorer \"https://github.com/CLiF-1593/ADOFAI_Typographer\""), selector_clicked = true;
 		break;
+	}
+
+	if (selector_clicked) {
+		this->activated_menu = NONE;
 	}
 }

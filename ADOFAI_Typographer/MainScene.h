@@ -2,6 +2,10 @@
 #include "Scene.h"
 #include "UI_Window.h"
 #include "MenuComponent.h"
+#include "SettingComponent.h"
+#include "ScreenComponent.h"
+#include "MotionListComponent.h"
+#include "TimelineComponent.h"
 
 class MainScene : public Scene {
 private:
@@ -10,6 +14,10 @@ private:
 	SDL_Texture* developed;	
 
 	MenuComponent* menu_comp;
+	SettingComponent* setting_comp;
+	ScreenComponent* screen_comp;
+	MotionListComponent* motion_list_comp;
+	TimelineComponent* timeline_comp;
 
 	const int intro_duration = 4000;
 	int begin_time;
