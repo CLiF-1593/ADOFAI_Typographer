@@ -47,3 +47,7 @@ int UI_Window::GetHeight() {
 	SDL_GetWindowSize(this->win, NULL, &h);
 	return h;
 }
+
+bool UI_Window::IsFocused() {
+	return SDL_GetWindowFlags(this->win) & SDL_WINDOW_INPUT_FOCUS;
+}

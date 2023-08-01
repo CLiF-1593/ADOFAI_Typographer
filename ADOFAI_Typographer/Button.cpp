@@ -1,7 +1,8 @@
 #include "Button.h"
 #include "Texture.h"
+#include "Log.h"
 
-Button::Button(string str, SDL_Renderer* ren, int size, int x, int y) {
+Button::Button(string str, SDL_Renderer* ren, int size, int x, int y, bool centered) {
 	this->ren = ren;
 	this->texture = Texture::LoadText(str.c_str(), ren, size, "main", Color::RGB(CLR_STD_TEXT));
 	SDL_QueryTexture(this->texture, NULL, NULL, &this->rect.w, &this->rect.h);
@@ -10,6 +11,10 @@ Button::Button(string str, SDL_Renderer* ren, int size, int x, int y) {
 	this->is_enabled = true;
 	this->rect.x = x;
 	this->rect.y = y;
+	if (centered) {
+		this->rect.x = x - this->rect.w / 2;
+		this->rect.y = y - this->rect.h / 2;
+	}
 }
 
 Button::~Button() {
@@ -32,6 +37,20 @@ bool Button::IsClicked() {
 
 SDL_Rect Button::GetRect() {
 	return this->rect;
+}
+
+void Button::SetRect(SDL_Rect rect) {
+	this->rect = rect;
+}
+
+void Button::SetPositionCentered(int x, int y) {
+	this->rect.x = x - this->rect.w / 2;
+	this->rect.y = y - this->rect.h / 2;
+}
+
+void Button::SetPosition(int x, int y) {
+	this->rect.x = x;
+	this->rect.y = y;
 }
 
 void Button::Render() {

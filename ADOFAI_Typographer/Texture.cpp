@@ -113,30 +113,66 @@ SDL_Texture * Texture::LoadImage(const char * filename, SDL_Renderer * renderer)
 	return texture;
 }
 
+bool IsSurfaceFullyTransparent(SDL_Surface* surface) {
+	int width = surface->w;
+	int height = surface->h;
+
+	Uint32* pixels = (Uint32*)surface->pixels;
+	int pitch = surface->pitch / sizeof(Uint32);
+
+	for (int y = 0; y < height; ++y) {
+		for (int x = 0; x < width; ++x) {
+			int index = y * pitch + x;
+			Uint8 r, g, b, a;
+			SDL_GetRGBA(pixels[index], surface->format, &r, &g, &b, &a);
+			if (a != 0) {
+				return false;
+			}
+		}
+	}
+
+	return true;
+}
+
 SDL_Texture * Texture::LoadText(const char* str, SDL_Renderer* renderer, int size, const char* fontfile_name, Color::RGB color, int wrap)
 {
 	TTF_Font* font;
 	SDL_Surface *surface;
 	SDL_Texture *texture;
+	SDL_Color clr;
+	clr.r = color.r;
+	clr.g = color.g;
+	clr.b = color.b;
+	clr.a = 255;
+	
+	GENERATE_TEXT:
 	string adr;
 	adr = fontfile_name;
 	adr += ".font";
 	adr = FileIO::Location(adr);
 	font = TTF_OpenFont(adr.c_str(), size);
 
-	SDL_Color clr;
-	clr.r = color.r;
-	clr.g = color.g;
-	clr.b = color.b;
-	clr.a = 255;
-
 	surface = TTF_RenderUTF8_Blended_Wrapped(font, str, color.to_SDL(), wrap);
+
+	if (!surface || IsSurfaceFullyTransparent(surface)) {
+		if (fontfile_name == "main") fontfile_name = "main_univ";
+		else if (fontfile_name == "main_univ") fontfile_name = "main_univ_sub";
+		else if (fontfile_name == "main_univ_sub") fontfile_name = "";
+		else fontfile_name = "main";
+
+		if (fontfile_name != "") {
+			if (!surface) {
+				SDL_FreeSurface(surface);
+				surface = nullptr;
+			}
+			goto GENERATE_TEXT;
+		}
+	}
 
 	texture = SDL_CreateTextureFromSurface(renderer, surface);
 
 	SDL_FreeSurface(surface);
 
-	//delete font;
 	TTF_CloseFont(font);
 	return texture;
 }

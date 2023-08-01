@@ -2,6 +2,8 @@
 #include "Texture.h"
 #include "SoftwareStatus.h"
 #include "Log.h"
+#include "MotionStatus.h"
+#include "TextInputScene.h"
 
 MenuComponent::MenuComponent(UI_Window* win) : Component(win) {
 
@@ -74,8 +76,6 @@ MenuComponent::MenuComponent(UI_Window* win) : Component(win) {
 	this->selection_motion_export_motion = new Button("Export Motion", this->win->GetRenderer(), menu_comp_font_size, this->btn_motion->GetRect().x + menu_comp_margin, y);
 	y += this->selection_file_new->GetRect().h;
 	this->selection_motion_import_motion = new Button("Import Motion", this->win->GetRenderer(), menu_comp_font_size, this->btn_motion->GetRect().x + menu_comp_margin, y);
-	y += this->selection_file_new->GetRect().h;
-	this->selection_motion_change_motion_name = new Button("Change Motion Name", this->win->GetRenderer(), menu_comp_font_size, this->btn_motion->GetRect().x + menu_comp_margin, y);
 
 	y = menu_comp_height + menu_comp_margin;
 	this->selection_info_credit = new Button("Credit", this->win->GetRenderer(), menu_comp_font_size, this->btn_info->GetRect().x + menu_comp_margin, y);
@@ -94,7 +94,7 @@ MenuComponent::~MenuComponent() {
 	delete this->selection_edit_undo, this->selection_edit_redo, this->selection_edit_cut, this->selection_edit_copy, this->selection_edit_paste, this->selection_edit_delete;
 	delete this->selection_mode_typo_editor, this->selection_mode_motion_editor;
 	delete this->selection_object_add_text, this->selection_object_add_image, this->selection_object_add_box;
-	delete this->selection_motion_new_motion, this->selection_motion_export_motion, this->selection_motion_import_motion, this->selection_motion_change_motion_name;
+	delete this->selection_motion_new_motion, this->selection_motion_export_motion, this->selection_motion_import_motion;
 	delete this->selection_info_credit, this->selection_info_how_to_use, this->selection_info_github;
 }
 
@@ -194,7 +194,6 @@ void MenuComponent::Rendering() {
 			this->selection_motion_new_motion->Render();
 			this->selection_motion_export_motion->Render();
 			this->selection_motion_import_motion->Render();
-			this->selection_motion_change_motion_name->Render();
 			break;
 		case INFO:
 			this->selection_info_credit->Render();
@@ -246,7 +245,6 @@ void MenuComponent::EventProcess(SDL_Event* evt) {
 		this->selection_motion_new_motion->EventProcess(evt);
 		this->selection_motion_export_motion->EventProcess(evt);
 		this->selection_motion_import_motion->EventProcess(evt);
-		this->selection_motion_change_motion_name->EventProcess(evt);
 		break;
 	case INFO:
 		this->selection_info_credit->EventProcess(evt);
@@ -258,29 +256,38 @@ void MenuComponent::EventProcess(SDL_Event* evt) {
 	// Click Event Check
 
 	// Menu Activation
-	if (this->btn_file->IsClicked() || (this->activated_menu && this->btn_file->IsHovered())) {
-		this->activated_menu = FILE;
+	bool chk = false;
+	if ((chk = this->btn_file->IsClicked()) || (this->activated_menu && this->btn_file->IsHovered())) {
+		if (chk && this->activated_menu) this->activated_menu = NONE;
+		else this->activated_menu = FILE;
 	}
-	else if (this->btn_edit->IsClicked() || (this->activated_menu && this->btn_edit->IsHovered())) {
-		this->activated_menu = EDIT;
+	else if ((chk = this->btn_edit->IsClicked()) || (this->activated_menu && this->btn_edit->IsHovered())) {
+		if (chk && this->activated_menu) this->activated_menu = NONE;
+		else this->activated_menu = EDIT;
 	}
-	else if (this->btn_mode->IsClicked() || (this->activated_menu && this->btn_mode->IsHovered())) {
-		this->activated_menu = MODE;
+	else if ((chk = this->btn_mode->IsClicked()) || (this->activated_menu && this->btn_mode->IsHovered())) {
+		if (chk && this->activated_menu) this->activated_menu = NONE;
+		else this->activated_menu = MODE;
 	}
-	else if (this->btn_object->IsClicked() || (this->activated_menu && this->btn_object->IsHovered())) {
-		this->activated_menu = OBJECT;
+	else if ((chk = this->btn_object->IsClicked()) || (this->activated_menu && this->btn_object->IsHovered())) {
+		if (chk && this->activated_menu) this->activated_menu = NONE;
+		else this->activated_menu = OBJECT;
 	}
-	else if (this->btn_motion->IsClicked() || (this->activated_menu && this->btn_motion->IsHovered())) {
-		this->activated_menu = MOTION;
+	else if ((chk = this->btn_motion->IsClicked()) || (this->activated_menu && this->btn_motion->IsHovered())) {
+		if (chk && this->activated_menu) this->activated_menu = NONE;
+		else this->activated_menu = MOTION;
 	}
-	else if (this->btn_render->IsClicked() || (this->activated_menu && this->btn_render->IsHovered())) {
-		this->activated_menu = RENDER;
+	else if ((chk = this->btn_render->IsClicked()) || (this->activated_menu && this->btn_render->IsHovered())) {
+		if (chk && this->activated_menu) this->activated_menu = NONE;
+		else this->activated_menu = RENDER;
 	}
-	else if (this->btn_preview->IsClicked() || (this->activated_menu && this->btn_preview->IsHovered())) {
-		this->activated_menu = PREVIEW;
+	else if ((chk = this->btn_preview->IsClicked()) || (this->activated_menu && this->btn_preview->IsHovered())) {
+		if (chk && this->activated_menu) this->activated_menu = NONE;
+		else this->activated_menu = PREVIEW;
 	}
-	else if (this->btn_info->IsClicked() || (this->activated_menu && this->btn_info->IsHovered())) {
-		this->activated_menu = INFO;
+	else if ((chk = this->btn_info->IsClicked()) || (this->activated_menu && this->btn_info->IsHovered())) {
+		if (chk && this->activated_menu) this->activated_menu = NONE;
+		else this->activated_menu = INFO;
 	}
 	else if (this->activated_menu) {
 		if (evt->type == SDL_MOUSEBUTTONUP) {
@@ -335,10 +342,13 @@ void MenuComponent::EventProcess(SDL_Event* evt) {
 		if (this->selection_object_add_box->IsClicked()) selector_clicked = true;
 		break;
 	case MOTION:
-		if (this->selection_motion_new_motion->IsClicked()) selector_clicked = true;
+		if (this->selection_motion_new_motion->IsClicked()) {
+			MotionStatus::AddMotion();
+			this->SetChildScene(new TextInputScene(this->win, "Add Motion", "Motion Name", &(MotionStatus::GetMotionList()->back()->name)));
+			selector_clicked = true;
+		}
 		if (this->selection_motion_export_motion->IsClicked()) selector_clicked = true;
 		if (this->selection_motion_import_motion->IsClicked()) selector_clicked = true;
-		if (this->selection_motion_change_motion_name->IsClicked()) selector_clicked = true;
 		break;
 	case INFO:
 		if (this->selection_info_credit->IsClicked()) selector_clicked = true;

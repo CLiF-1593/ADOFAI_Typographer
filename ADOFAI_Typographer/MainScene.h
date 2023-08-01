@@ -22,6 +22,8 @@ private:
 	const int intro_duration = 4000;
 	int begin_time;
 
+	Scene* child_scene;
+
 public:
 	MainScene(UI_Window* win);
 	~MainScene();

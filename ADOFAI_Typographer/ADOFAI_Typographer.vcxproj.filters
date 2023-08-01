@@ -81,14 +81,8 @@
     <ClCompile Include="MainScene.cpp">
       <Filter>Source Files\Scenes</Filter>
     </ClCompile>
-    <ClCompile Include="Button.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Component.cpp">
       <Filter>Source Files\Scenes</Filter>
-    </ClCompile>
-    <ClCompile Include="TypoStatus.cpp">
-      <Filter>Source Files\Typo</Filter>
     </ClCompile>
     <ClCompile Include="MenuComponent.cpp">
       <Filter>Source Files\Scenes\MainScene Components</Filter>
@@ -104,6 +98,18 @@
     </ClCompile>
     <ClCompile Include="TimelineComponent.cpp">
       <Filter>Source Files\Scenes\MainScene Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Button.cpp">
+      <Filter>Source Files\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="MotionStatus.cpp">
+      <Filter>Source Files\Typo</Filter>
+    </ClCompile>
+    <ClCompile Include="SoftwareStatus.cpp">
+      <Filter>Source Files\Typo</Filter>
+    </ClCompile>
+    <ClCompile Include="TextInputScene.cpp">
+      <Filter>Source Files\Scenes</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -143,9 +149,6 @@
     <ClInclude Include="MainScene.h">
       <Filter>Header Files\Scenes</Filter>
     </ClInclude>
-    <ClInclude Include="Button.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Component.h">
       <Filter>Header Files\Scenes</Filter>
     </ClInclude>
@@ -169,6 +172,18 @@
     </ClInclude>
     <ClInclude Include="TimelineComponent.h">
       <Filter>Header Files\Scenes\MainScene Components</Filter>
+    </ClInclude>
+    <ClInclude Include="TypoStatus.h">
+      <Filter>Header Files\Typo</Filter>
+    </ClInclude>
+    <ClInclude Include="MotionStatus.h">
+      <Filter>Header Files\Typo</Filter>
+    </ClInclude>
+    <ClInclude Include="Button.h">
+      <Filter>Header Files\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="TextInputScene.h">
+      <Filter>Header Files\Scenes</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

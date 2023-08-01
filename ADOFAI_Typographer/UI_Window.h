@@ -13,5 +13,7 @@ public:
 	SDL_Renderer* GetRenderer();
 	int GetWidth();
 	int GetHeight();
+
+	bool IsFocused();
 };
 

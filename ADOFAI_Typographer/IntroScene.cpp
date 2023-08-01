@@ -6,16 +6,22 @@
 #include "Status.h"
 
 IntroScene::IntroScene(UI_Window* win) : Scene(win) {
+	Log::Debug("IntroScene", "Constructor", " : Created");
 	this->clif_logo = Texture::LoadImage("software_logo.img", this->win->GetRenderer());
 	this->software_title = Texture::LoadText("ADOFAI Typographer", this->win->GetRenderer(), 65, "main", Color::RGB(CLR_STD_TEXT));
 	this->developed = Texture::LoadText("Developed by CLiF", this->win->GetRenderer(), 40, "main", Color::RGB(CLR_SUB_TEXT));
 	this->begin_time = clock();
 
 	Status::IgnoreEvent();
-	Status::RenderRegularly();
+	Status::RenderRegularly(60);
+	Status::AlwaysRender();
 }
 
 IntroScene::~IntroScene() {
+	Log::Debug("IntroScene", "Destructor", " : Deleted");
+	SDL_DestroyTexture(this->clif_logo);
+	SDL_DestroyTexture(this->software_title);
+	SDL_DestroyTexture(this->developed);
 }
 
 void IntroScene::Rendering() {

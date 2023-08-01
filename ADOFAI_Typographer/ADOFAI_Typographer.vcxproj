@@ -143,14 +143,16 @@
     <ClCompile Include="MainScene.cpp" />
     <ClCompile Include="MenuComponent.cpp" />
     <ClCompile Include="MotionListComponent.cpp" />
+    <ClCompile Include="MotionStatus.cpp" />
     <ClCompile Include="ScreenComponent.cpp" />
     <ClCompile Include="SettingComponent.cpp" />
+    <ClCompile Include="TextInputScene.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="Status.cpp" />
     <ClCompile Include="TimelineComponent.cpp" />
     <ClCompile Include="Transition.cpp" />
-    <ClCompile Include="TypoStatus.cpp" />
+    <ClCompile Include="SoftwareStatus.cpp" />
     <ClCompile Include="UI_Element.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="UI_Window.cpp" />
@@ -166,15 +168,18 @@
     <ClInclude Include="MainScene.h" />
     <ClInclude Include="MenuComponent.h" />
     <ClInclude Include="MotionListComponent.h" />
+    <ClInclude Include="MotionStatus.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="ScreenComponent.h" />
     <ClInclude Include="SettingComponent.h" />
+    <ClInclude Include="TextInputScene.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="Status.h" />
     <ClInclude Include="TimelineComponent.h" />
     <ClInclude Include="Transition.h" />
     <ClInclude Include="SoftwareStatus.h" />
+    <ClInclude Include="TypoStatus.h" />
     <ClInclude Include="UI_Element.h" />
     <ClInclude Include="UI_Window.h" />
   </ItemGroup>

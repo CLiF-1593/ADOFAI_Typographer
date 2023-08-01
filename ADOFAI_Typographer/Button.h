@@ -17,7 +17,7 @@ private:
 	SDL_Renderer* ren;
 
 public:
-	Button(string str, SDL_Renderer* ren, int size, int x, int y);
+	Button(string str, SDL_Renderer* ren, int size, int x, int y, bool centered = false);
 	~Button();
 
 	void SetEnabled(bool enabled);
@@ -25,6 +25,11 @@ public:
 	bool IsHovered();
 	bool IsClicked();
 	SDL_Rect GetRect();
+
+	void SetRect(SDL_Rect rect);
+
+	void SetPositionCentered(int x, int y);
+	void SetPosition(int x, int y);
 
 	void Render();
 	void EventProcess(SDL_Event* evt);

@@ -11,7 +11,7 @@
 		- edit : undo, redo, cut, copy, paste, delete
 		- mode : typo editor, motion editor
 		- object : add text, add box, add image
-		- motion : new motion, export motion, import motion, change motion name
+		- motion : new motion, export motion, import motion
 		- info : credit, how to use, github
 */
 
@@ -67,11 +67,10 @@ private:
 	Button* selection_object_add_box;
 	Button* selection_object_add_image;
 
-	const int selection_motion_cnt = 4;
+	const int selection_motion_cnt = 3;
 	Button* selection_motion_new_motion;
 	Button* selection_motion_export_motion;
 	Button* selection_motion_import_motion;
-	Button* selection_motion_change_motion_name;
 
 	const int selection_render_cnt = 2;
 	Button* selection_render_render;

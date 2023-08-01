@@ -7,6 +7,8 @@ protected:
 
 public:
 	Scene(UI_Window* win);
+	virtual ~Scene();
+
 	virtual void Rendering() abstract;
 	virtual void EventProcess(SDL_Event* evt) abstract;
 

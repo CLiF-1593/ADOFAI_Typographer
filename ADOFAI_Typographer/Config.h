@@ -27,3 +27,5 @@
 #endif
 
 using Time = time_t;
+
+#define FPS_LIMIT 120
