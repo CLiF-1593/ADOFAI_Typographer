@@ -42,7 +42,7 @@ MotionListComponent::~MotionListComponent() {
 }
 
 void MotionListComponent::Rendering() {
-	if (MotionStatus::GetMotion()) {
+	if (MotionStatus::CurrentMotion()) {
 		this->btn_delete->SetEnabled(true);
 		this->btn_rename->SetEnabled(true);
 		this->btn_append->SetEnabled(true);
@@ -150,13 +150,13 @@ void MotionListComponent::EventProcess(SDL_Event* evt) {
 
 		if (this->btn_add->IsClicked()) {
 			MotionStatus::AddMotion();
-			this->SetChildScene(new TextInputScene(this->win, "Add Motion", "Motion Name", &(MotionStatus::GetMotion()->name)));
+			this->SetChildScene(new TextInputScene(this->win, "Add Motion", "Motion Name", &(MotionStatus::CurrentMotion()->name)));
 		}
 		else if (this->btn_delete->IsClicked()) {
 			MotionStatus::DeleteMotion();
 		}
 		else if (this->btn_rename->IsClicked()) {
-			this->SetChildScene(new TextInputScene(this->win, "Rename Motion", "Motion Name", &(MotionStatus::GetMotion()->name)));
+			this->SetChildScene(new TextInputScene(this->win, "Rename Motion", "Motion Name", &(MotionStatus::CurrentMotion()->name)));
 		}
 	}
 

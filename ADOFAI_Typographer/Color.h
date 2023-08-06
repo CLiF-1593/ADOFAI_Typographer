@@ -7,9 +7,15 @@
 #define CLR_SUB_TEXT		170, 170, 170, 255
 #define CLR_COMP_BACKGROUND 32, 32, 32, 255
 #define CLR_COMP_BACKGROUND_BRIGHT 96, 96, 96, 255
+#define CLR_COMP_BACKGROUND_BRIGHT_SUB 72, 72, 72, 255
 #define CLR_SCREEN_BACKGROUND 18, 18, 18, 255
 #define CLR_STD_BORDER		48, 48, 48, 255
 #define CLR_WINDOW_THEME	Color::WindowsSTD::GetThemeColor().r, Color::WindowsSTD::GetThemeColor().g, Color::WindowsSTD::GetThemeColor().b, 255
+
+#define CLR_POSITION_BAR	255, 171, 212, 255
+#define CLR_ROTATION_BAR	185, 171, 255, 255
+#define CLR_SCALE_BAR		255, 226, 171, 255
+#define CLR_OPACITY_BAR		189, 255, 171, 255
 
 namespace Color {
 	
