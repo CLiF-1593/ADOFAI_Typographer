@@ -14,6 +14,7 @@ public:
 	public:
 		int begin_frame = 0, end_frame = 30;
 		TransitionType transition;
+		bool immediate = false;
 	};
 	class Position : public Unit {
 	public: 
@@ -38,6 +39,8 @@ public:
 	std::vector<Opacity> opacity;
 
 	std::string name;
+
+	Motion::Unit* current_motion_unit;
 
 	SDL_Texture* GetTexture(UI_Window* win);
 
@@ -69,8 +72,7 @@ public:
 	static std::vector<Motion*>* GetMotionList();
 
 	static void SetCurrentMotionIndex(int index);
-
-
+	
 private:
 	static std::vector<Motion*> motion_list;
 	static int current_motion_index;

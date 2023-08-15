@@ -53,6 +53,7 @@ Motion::Motion() {
 	this->name = "New Motion";
 	this->prev_name = "";
 	this->texture = nullptr;
+	this->current_motion_unit = nullptr;
 
 	// SAMPLE
 	/*Position pos;

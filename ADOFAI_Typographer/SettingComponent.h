@@ -11,9 +11,27 @@
 #define setting_comp_x (setting_comp_margin)
 #define setting_comp_y (menu_comp_height + 2 + setting_comp_margin)
 
+#define setting_comp_minimum_width 300
+
 class SettingComponent : public Component {
 private:
 	SDL_Texture* title;
+
+	SDL_Texture* begin_frame_text;
+	SDL_Texture* end_frame_text;
+	SDL_Texture* imm_run_text;
+	SDL_Texture* imm_frame_text;
+	SDL_Texture* pos_x_text;
+	SDL_Texture* pos_y_text;
+	SDL_Texture* rot_deg_text;
+	SDL_Texture* scale_x_text;
+	SDL_Texture* scale_y_text;
+	SDL_Texture* opacity_text;
+	SDL_Texture* transition_text;
+
+	SDL_Texture* warnning_text;
+
+	int prev_width;
 
 public:
 	SettingComponent(UI_Window* win);
@@ -21,6 +39,5 @@ public:
 
 	void Rendering() override;
 	void EventProcess(SDL_Event* evt) override;
-
 };
 

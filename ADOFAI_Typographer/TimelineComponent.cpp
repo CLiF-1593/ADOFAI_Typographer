@@ -352,6 +352,7 @@ void TimelineComponent::EventProcess(SDL_Event* evt) {
 			this->pseudo_current_frame = this->current_frame;
 			delete this->current_bar;
 			this->current_bar = new TimelineBar(this->win, &MotionStatus::CurrentMotion()->position.back(), 0);
+			MotionStatus::CurrentMotion()->current_motion_unit = &MotionStatus::CurrentMotion()->position.back();
 			return;
 		}
 		if (this->rotation_add_button->IsClicked()) {
@@ -360,6 +361,7 @@ void TimelineComponent::EventProcess(SDL_Event* evt) {
 			this->pseudo_current_frame = this->current_frame;
 			delete this->current_bar;
 			this->current_bar = new TimelineBar(this->win, &MotionStatus::CurrentMotion()->rotation.back(), 0);
+			MotionStatus::CurrentMotion()->current_motion_unit = &MotionStatus::CurrentMotion()->rotation.back();
 			return;
 		}
 		if (this->scale_add_button->IsClicked()) {
@@ -368,6 +370,7 @@ void TimelineComponent::EventProcess(SDL_Event* evt) {
 			this->pseudo_current_frame = this->current_frame;
 			delete this->current_bar;
 			this->current_bar = new TimelineBar(this->win, &MotionStatus::CurrentMotion()->scale.back(), 0);
+			MotionStatus::CurrentMotion()->current_motion_unit = &MotionStatus::CurrentMotion()->scale.back();
 			return;
 		}
 		if (this->opacity_add_button->IsClicked()) {
@@ -376,6 +379,7 @@ void TimelineComponent::EventProcess(SDL_Event* evt) {
 			this->pseudo_current_frame = this->current_frame;
 			delete this->current_bar;
 			this->current_bar = new TimelineBar(this->win, &MotionStatus::CurrentMotion()->opacity.back(), 0);
+			MotionStatus::CurrentMotion()->current_motion_unit = &MotionStatus::CurrentMotion()->opacity.back();
 			return;
 		}
 
@@ -393,6 +397,7 @@ void TimelineComponent::EventProcess(SDL_Event* evt) {
 					if (bar.IsClicked(this, evt, timeline_bar, time_marking_line, 0)) {
 						delete this->current_bar;
 						this->current_bar = new TimelineBar(this->win, &cur_motion->position[i], 0);
+						MotionStatus::CurrentMotion()->current_motion_unit = &cur_motion->position[i];
 						this->current_bar->Press(evt->button.x);
 						return;
 					}
@@ -402,6 +407,7 @@ void TimelineComponent::EventProcess(SDL_Event* evt) {
 					if (bar.IsClicked(this, evt, timeline_bar, time_marking_line, 0)) {
 						delete this->current_bar;
 						this->current_bar = new TimelineBar(this->win, &cur_motion->rotation[i], 1);
+						MotionStatus::CurrentMotion()->current_motion_unit = &cur_motion->rotation[i];
 						this->current_bar->Press(evt->button.x);
 						return;
 					}
@@ -411,6 +417,7 @@ void TimelineComponent::EventProcess(SDL_Event* evt) {
 					if (bar.IsClicked(this, evt, timeline_bar, time_marking_line, 0)) {
 						delete this->current_bar;
 						this->current_bar = new TimelineBar(this->win, &cur_motion->scale[i], 2);
+						MotionStatus::CurrentMotion()->current_motion_unit = &cur_motion->scale[i];
 						this->current_bar->Press(evt->button.x);
 						return;
 					}
@@ -420,6 +427,7 @@ void TimelineComponent::EventProcess(SDL_Event* evt) {
 					if (bar.IsClicked(this, evt, timeline_bar, time_marking_line, 0)) {
 						delete this->current_bar;
 						this->current_bar = new TimelineBar(this->win, &cur_motion->opacity[i], 3);
+						MotionStatus::CurrentMotion()->current_motion_unit = &cur_motion->opacity[i];
 						this->current_bar->Press(evt->button.x);
 						return;
 					}
@@ -434,6 +442,9 @@ void TimelineComponent::EventProcess(SDL_Event* evt) {
 	if (evt->type == SDL_MOUSEBUTTONDOWN) {
 		delete this->current_bar;
 		this->current_bar = new TimelineBar(this->win, nullptr, 0);
+		if (MotionStatus::CurrentMotion()) {
+			MotionStatus::CurrentMotion()->current_motion_unit = nullptr;
+		}
 
 		if (evt->motion.x > time_marking_line.x && evt->motion.x < time_marking_line.x + time_marking_line.w) {
 			if (evt->motion.y > time_marking_line.y && evt->motion.y < time_marking_line.y + time_marking_line.h) {
@@ -471,6 +482,12 @@ bool TimelineBar::CalculateBarArea(TimelineComponent* comp, SDL_Rect& bar_area, 
 
 		int begin = this->motion->begin_frame * comp->frame_size - comp->begin_frame * comp->frame_size + bar_area.x;
 		int end = this->motion->end_frame * comp->frame_size - comp->begin_frame * comp->frame_size + bar_area.x;
+		if (this->motion->immediate) {
+			begin -= 0.5 * comp->frame_size;
+			end += 0.5 * comp->frame_size;
+			bar_area.y += bar_area.h / 4;
+			bar_area.h /= 2;
+		}
 		if (begin > bar_area.x + bar_area.w || end < bar_area.x) return false;
 		if (begin < bar_area.x) begin = bar_area.x;
 		if (end > bar_area.x + bar_area.w) end = bar_area.x + bar_area.w;
@@ -552,12 +569,12 @@ bool TimelineBar::SelectedBarEventProcess(TimelineComponent* comp, SDL_Event* ev
 			this->begin_frame = this->motion->begin_frame;
 			this->end_frame = this->motion->end_frame;
 
-			if (x >= left_area.x && x <= left_area.x + left_area.w && y >= left_area.y && y <= left_area.y + left_area.h) {
+			if (!this->motion->immediate && x >= left_area.x && x <= left_area.x + left_area.w && y >= left_area.y && y <= left_area.y + left_area.h) {
 				this->is_left_resizing = true;
 				Status::SetCursor(SDL_SYSTEM_CURSOR_SIZEWE);
 				return true;
 			}
-			else if (x >= right_area.x && x <= right_area.x + right_area.w && y >= right_area.y && y <= right_area.y + right_area.h) {
+			else if (!this->motion->immediate && x >= right_area.x && x <= right_area.x + right_area.w && y >= right_area.y && y <= right_area.y + right_area.h) {
 				this->is_right_resizing = true;
 				Status::SetCursor(SDL_SYSTEM_CURSOR_SIZEWE);
 				return true;
