@@ -24,7 +24,7 @@ void TimelineComponent::DrawNumber(int x, int y, int number) {
 	if (digits.empty()) digits.push_back(0);
 	for (int i = digits.size() - 1; i >= 0; i--) {
 		SDL_QueryTexture(this->number_table[digits[i]], NULL, NULL, &r.w, &r.h);
-		if(r.x + r.w >= timeline_comp_width + timeline_comp_x) break;
+		if (r.x + r.w >= timeline_comp_width + timeline_comp_x) break;
 		SDL_RenderCopy(this->win->GetRenderer(), this->number_table[digits[i]], NULL, &r);
 		r.x += r.w;
 	}
@@ -280,7 +280,7 @@ void TimelineComponent::EventProcess(SDL_Event* evt) {
 		this->begin_frame -= (evt->motion.x - this->prev_x) / this->frame_size;
 		if (this->begin_frame < 0) this->begin_frame = 0;
 		else this->prev_x = evt->motion.x;
-		if(evt->type == SDL_MOUSEBUTTONUP)
+		if (evt->type == SDL_MOUSEBUTTONUP && evt->button.button == SDL_BUTTON_LEFT)
 			this->time_table_dragging = false;
 		return;
 	}
@@ -291,7 +291,7 @@ void TimelineComponent::EventProcess(SDL_Event* evt) {
 	rect.y = timeline_comp_y + rect.h;
 	rect.w = timeline_comp_menu_width;
 	rect.h = timeline_comp_height - rect.h - 2;
-	
+
 	// Time Marking Line
 	SDL_Rect time_marking_line = rect;
 	time_marking_line.x = timeline_comp_x + timeline_comp_menu_width;
@@ -309,12 +309,12 @@ void TimelineComponent::EventProcess(SDL_Event* evt) {
 
 		if (x >= rect.x && x <= rect.x + rect.w && y >= rect.y && y <= rect.y + rect.h || this->time_marker_dragging) {
 			Status::SetCursor(SDL_SYSTEM_CURSOR_SIZEWE);
-			if (evt->type == SDL_MOUSEBUTTONDOWN) {
+			if (evt->type == SDL_MOUSEBUTTONDOWN && evt->button.button == SDL_BUTTON_LEFT) {
 				this->time_marker_dragging = true;
 				this->prev_x = evt->button.x;
 				return;
 			}
-			else if (this->time_marker_dragging && evt->type == SDL_MOUSEBUTTONUP) {
+			else if (this->time_marker_dragging && evt->type == SDL_MOUSEBUTTONUP && evt->button.button == SDL_BUTTON_LEFT) {
 				this->time_marker_dragging = false;
 				return;
 			}
@@ -329,7 +329,7 @@ void TimelineComponent::EventProcess(SDL_Event* evt) {
 				int pos = this->current_frame * this->frame_size - this->begin_frame * this->frame_size + time_marking_line.x;
 				if (pos < time_marking_line.x)
 					this->begin_frame -= (time_marking_line.x - pos + 1) / this->frame_size, this->prev_x = time_marking_line.x + this->frame_size / 2;
-				else if(pos > time_marking_line.x + time_marking_line.w)
+				else if (pos > time_marking_line.x + time_marking_line.w)
 					this->begin_frame += (pos - (time_marking_line.x + time_marking_line.w) + 2) / this->frame_size, this->prev_x = time_marking_line.x + time_marking_line.w - this->frame_size / 2;
 				return;
 			}
@@ -339,7 +339,7 @@ void TimelineComponent::EventProcess(SDL_Event* evt) {
 	SDL_Rect timeline_bar = time_marking_line;
 	if (SoftwareStatus::software_mode == SoftwareStatus::MOTION_EDITOR) {
 		timeline_bar.h /= 4;
-		
+
 		// Add Button
 		this->position_add_button->EventProcess(evt);
 		this->rotation_add_button->EventProcess(evt);
@@ -440,28 +440,34 @@ void TimelineComponent::EventProcess(SDL_Event* evt) {
 	}
 
 	if (evt->type == SDL_MOUSEBUTTONDOWN) {
-		delete this->current_bar;
-		this->current_bar = new TimelineBar(this->win, nullptr, 0);
-		if (MotionStatus::CurrentMotion()) {
-			MotionStatus::CurrentMotion()->current_motion_unit = nullptr;
+		if (evt->button.button == SDL_BUTTON_LEFT) {
+			if (evt->motion.x > timeline_comp_x && evt->motion.y > timeline_comp_y) {
+				if (evt->motion.x < timeline_comp_x + timeline_comp_width && evt->motion.y < timeline_comp_y + timeline_comp_height) {
+					delete this->current_bar;
+					this->current_bar = new TimelineBar(this->win, nullptr, 0);
+					if (MotionStatus::CurrentMotion()) {
+						MotionStatus::CurrentMotion()->current_motion_unit = nullptr;
+					}
+				}
+			}
+			if (evt->motion.x > time_marking_line.x && evt->motion.x < time_marking_line.x + time_marking_line.w) {
+				if (evt->motion.y > time_marking_line.y && evt->motion.y < time_marking_line.y + time_marking_line.h) {
+					this->time_table_dragging = true;
+					this->prev_x = evt->button.x;
+				}
+			}
+			time_marking_line.h = time_marking_line.y - timeline_comp_y;
+			time_marking_line.y = timeline_comp_y;
+			if (evt->motion.x > time_marking_line.x && evt->motion.x < time_marking_line.x + time_marking_line.w) {
+				if (evt->motion.y > time_marking_line.y && evt->motion.y < time_marking_line.y + time_marking_line.h) {
+					this->pseudo_current_frame = (evt->motion.x - time_marking_line.x) / this->frame_size + this->begin_frame;
+					this->current_frame = round(this->pseudo_current_frame);
+					this->time_marker_dragging = true;
+					this->prev_x = evt->button.x;
+				}
+			}
 		}
 
-		if (evt->motion.x > time_marking_line.x && evt->motion.x < time_marking_line.x + time_marking_line.w) {
-			if (evt->motion.y > time_marking_line.y && evt->motion.y < time_marking_line.y + time_marking_line.h) {
-				this->time_table_dragging = true;
-				this->prev_x = evt->button.x;
-			}
-		}
-		time_marking_line.h = time_marking_line.y - timeline_comp_y;
-		time_marking_line.y = timeline_comp_y;
-		if (evt->motion.x > time_marking_line.x && evt->motion.x < time_marking_line.x + time_marking_line.w) {
-			if (evt->motion.y > time_marking_line.y && evt->motion.y < time_marking_line.y + time_marking_line.h) {
-				this->pseudo_current_frame = (evt->motion.x - time_marking_line.x) / this->frame_size + this->begin_frame;
-				this->current_frame = round(this->pseudo_current_frame);
-				this->time_marker_dragging = true;
-				this->prev_x = evt->button.x;
-			}
-		}
 	}
 
 	Status::SetCursor(SDL_SYSTEM_CURSOR_ARROW);
@@ -509,7 +515,7 @@ TimelineBar::TimelineBar(UI_Window* win, Motion::Unit* motion, int level) {
 }
 
 TimelineBar::~TimelineBar() {
-	
+
 }
 
 void TimelineBar::Rendering(TimelineComponent* comp, SDL_Rect bar_area, SDL_Rect total_area, int offset, Color::RGB clr) {
@@ -537,7 +543,7 @@ bool TimelineBar::IsClicked(TimelineComponent* comp, SDL_Event* evt, SDL_Rect ba
 		int x = evt->button.x;
 		int y = evt->button.y;
 		if (x >= bar_area.x && x <= bar_area.x + bar_area.w && y >= bar_area.y && y <= bar_area.y + bar_area.h) {
-			if (evt->type == SDL_MOUSEBUTTONDOWN) {
+			if (evt->type == SDL_MOUSEBUTTONDOWN && evt->button.button == SDL_BUTTON_LEFT) {
 				comp->current_bar->motion = this->motion;
 				return true;
 			}
@@ -557,7 +563,7 @@ bool TimelineBar::SelectedBarEventProcess(TimelineComponent* comp, SDL_Event* ev
 		else if (this->is_left_resizing || this->is_right_resizing) {
 			Status::SetCursor(SDL_SYSTEM_CURSOR_SIZEWE);
 		}
-		if (evt->type == SDL_MOUSEBUTTONDOWN) {
+		if (evt->type == SDL_MOUSEBUTTONDOWN && evt->button.button == SDL_BUTTON_LEFT) {
 			SDL_Rect left_area = bar_area;
 			left_area.w = 5;
 			left_area.x = bar_area.x - left_area.w / 2;
@@ -586,7 +592,7 @@ bool TimelineBar::SelectedBarEventProcess(TimelineComponent* comp, SDL_Event* ev
 				return true;
 			}
 		}
-		else if (evt->type == SDL_MOUSEBUTTONUP) {
+		else if (evt->type == SDL_MOUSEBUTTONUP && evt->button.button == SDL_BUTTON_LEFT) {
 			int front, back;
 			if (this->is_pressed) {
 				if (SoftwareStatus::software_mode == SoftwareStatus::MOTION_EDITOR) {
@@ -612,7 +618,7 @@ bool TimelineBar::SelectedBarEventProcess(TimelineComponent* comp, SDL_Event* ev
 					this->motion->begin_frame = round(this->begin_frame);
 				}
 				else {
-					
+
 				}
 			}
 			else if (this->is_right_resizing) {
@@ -658,7 +664,7 @@ bool TimelineBar::SelectedBarEventProcess(TimelineComponent* comp, SDL_Event* ev
 				else {
 					this->prev_x = evt->motion.x;
 				}
-				
+
 				this->motion->begin_frame = round(this->begin_frame);
 				return true;
 			}

@@ -173,7 +173,7 @@ void MotionListComponent::EventProcess(SDL_Event* evt) {
 		if (rect.y + motion_list_comp_margin > motion_list_comp_y + motion_list_comp_height) break;
 		SDL_QueryTexture(motion->GetTexture(this->win), NULL, NULL, NULL, &rect.h);
 
-		if (evt->type == SDL_MOUSEBUTTONUP) {
+		if (evt->type == SDL_MOUSEBUTTONUP && evt->button.button == SDL_BUTTON_LEFT) {
 			if (evt->button.x >= rect.x && evt->button.x <= rect.x + rect.w) {
 				if (evt->button.y >= rect.y && evt->button.y <= rect.y + rect.h) {
 					MotionStatus::SetCurrentMotionIndex(i);

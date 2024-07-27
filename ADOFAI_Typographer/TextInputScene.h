@@ -2,7 +2,7 @@
 #include "Scene.h"
 #include <string>
 #include <vector>
-#include "Button.h"
+#include "UI_Element.h"
 using namespace std;
 
 class TextInputScene : public Scene {

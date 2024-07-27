@@ -1,6 +1,7 @@
 #pragma once
 #include <SDL.h>
 #include <string>
+
 using namespace std;
 class Button {
 private:
@@ -15,6 +16,8 @@ private:
 	bool is_enabled;
 	bool is_clicked;
 	SDL_Renderer* ren;
+
+
 
 public:
 	Button(string str, SDL_Renderer* ren, int size, int x, int y, bool centered = false);

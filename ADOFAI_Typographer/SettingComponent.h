@@ -1,5 +1,6 @@
 #pragma once
 #include "Component.h"
+#include "UI_Element.h"
 
 #define setting_comp_font_size 30
 
@@ -11,7 +12,7 @@
 #define setting_comp_x (setting_comp_margin)
 #define setting_comp_y (menu_comp_height + 2 + setting_comp_margin)
 
-#define setting_comp_minimum_width 300
+#define setting_comp_minimum_width 200
 
 class SettingComponent : public Component {
 private:
@@ -32,6 +33,10 @@ private:
 	SDL_Texture* warnning_text;
 
 	int prev_width;
+
+	NumberInput* frame_input_a, *frame_input_b;
+	NumberInput* value_input_a, *value_input_b;
+	Button* imm_switch_yes, *imm_switch_no;
 
 public:
 	SettingComponent(UI_Window* win);

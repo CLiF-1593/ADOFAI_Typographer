@@ -84,13 +84,13 @@ void Button::EventProcess(SDL_Event* evt) {
 		mx = evt->motion.x;
 		my = evt->motion.y;
 
-		if (evt->type == SDL_MOUSEBUTTONDOWN) {
+		if (evt->type == SDL_MOUSEBUTTONDOWN && evt->button.button == SDL_BUTTON_LEFT) {
 			if (mx >= rect.x && mx <= rect.x + rect.w && my >= rect.y && my <= rect.y + rect.h) {
 				if (status == BTN_HOVERED) status = BTN_PRESSED;
 				//return true;
 			}
 		}
-		else if (evt->type == SDL_MOUSEBUTTONUP) {
+		else if (evt->type == SDL_MOUSEBUTTONUP && evt->button.button == SDL_BUTTON_LEFT) {
 			if (mx >= rect.x && mx <= rect.x + rect.w && my >= rect.y && my <= rect.y + rect.h) {
 				if(status == BTN_PRESSED) this->is_clicked = true;
 				status = BTN_HOVERED;

@@ -63,9 +63,6 @@
     <ClCompile Include="Transition.cpp">
       <Filter>Source Files\Libraries</Filter>
     </ClCompile>
-    <ClCompile Include="UI_Element.cpp">
-      <Filter>Source Files\UI</Filter>
-    </ClCompile>
     <ClCompile Include="UI_Window.cpp">
       <Filter>Source Files\UI</Filter>
     </ClCompile>
@@ -110,6 +107,9 @@
     </ClCompile>
     <ClCompile Include="TextInputScene.cpp">
       <Filter>Source Files\Scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="NumberInput.cpp">
+      <Filter>Source Files\UI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -184,6 +184,9 @@
     </ClInclude>
     <ClInclude Include="TextInputScene.h">
       <Filter>Header Files\Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="NumberInput.h">
+      <Filter>Header Files\UI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

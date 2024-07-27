@@ -2,7 +2,7 @@
 #include <vector>
 #include <string>
 #include "Transition.h"
-#include "Button.h"
+#include "UI_Element.h"
 #include "UI_Window.h"
 
 class Motion {
@@ -12,25 +12,39 @@ class Motion {
 public:
 	class Unit {
 	public:
+		enum MotionType { NONE, POSITION, ROTATION, SCALE, OPACITY };
+
 		int begin_frame = 0, end_frame = 30;
-		TransitionType transition;
 		bool immediate = false;
+		TransitionType transition = LINEAR;
+
+		Unit(const MotionType& type) : motion_type(type) {};
+		inline MotionType Type() { return motion_type; }
+
+		void SetImmediate(bool immediate);
+
+	private:
+		MotionType motion_type;
 	};
 	class Position : public Unit {
-	public: 
+	public:
 		double x = 0, y = 0;
+		Position() : Unit(POSITION) {};
 	};
 	class Rotation : public Unit {
 	public:
 		double degree = 0;
+		Rotation() : Unit(ROTATION) {};
 	};
 	class Scale : public Unit {
-	public: 
-		double x = 100, y = 100; 
+	public:
+		double x = 100, y = 100;
+		Scale() : Unit(SCALE) {};
 	};
 	class Opacity : public Unit {
-	public: 
-		double opacity = 100; 
+	public:
+		double opacity = 100;
+		Opacity() : Unit(OPACITY) {};
 	};
 
 	std::vector<Position> position;
@@ -59,7 +73,7 @@ public:
 
 	void GetFrontBackFrame(int cur, int& front, int& back, int level);
 	bool IsOverlaped(Motion::Unit* motion, int level);
-};	
+};
 
 
 class MotionStatus {
@@ -72,7 +86,7 @@ public:
 	static std::vector<Motion*>* GetMotionList();
 
 	static void SetCurrentMotionIndex(int index);
-	
+
 private:
 	static std::vector<Motion*> motion_list;
 	static int current_motion_index;

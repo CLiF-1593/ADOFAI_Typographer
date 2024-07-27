@@ -1,6 +1,6 @@
 #pragma once
 #include "Component.h"
-#include "Button.h"
+#include "UI_Element.h"
 
 /*
 	Menu Bar Button List

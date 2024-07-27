@@ -311,3 +311,69 @@ bool Motion::IsOverlaped(Motion::Unit* motion, int level) {
 	}
 	return false;
 }
+
+void Motion::Unit::SetImmediate(bool immediate) {
+	this->immediate = immediate;
+	if (this->immediate) {
+		this->end_frame = this->begin_frame;
+		if (!MotionStatus::CurrentMotion()) return;
+		vector<Motion::Unit>* list = nullptr;
+		switch (this->motion_type) {
+		case MotionType::POSITION:
+			list = (vector<Motion::Unit>*) & MotionStatus::CurrentMotion()->position;
+			break;
+		case MotionType::ROTATION:
+			list = (vector<Motion::Unit>*) & MotionStatus::CurrentMotion()->rotation;
+			break;
+		case MotionType::SCALE:
+			list = (vector<Motion::Unit>*) & MotionStatus::CurrentMotion()->scale;
+			break;
+		case MotionType::OPACITY:
+			list = (vector<Motion::Unit>*) & MotionStatus::CurrentMotion()->opacity;
+			break;
+		}
+		if (list) {
+			for (int i = 0; i < list->size(); i++) {
+				if (&(list->at(i)) == this) {
+					auto t = list->at(0);
+					list->at(0) = list->at(i);
+					list->at(i) = t;
+					break;
+				}
+			}
+		}
+	}
+	else {
+		this->end_frame = this->begin_frame + 1;
+		if (!MotionStatus::CurrentMotion()) return;
+		vector<Motion::Unit>* list = nullptr;
+		switch (this->motion_type) {
+		case MotionType::POSITION:
+			list = (vector<Motion::Unit>*)&MotionStatus::CurrentMotion()->position;
+			break;
+		case MotionType::ROTATION:
+			list = (vector<Motion::Unit>*) & MotionStatus::CurrentMotion()->rotation;
+			break;
+		case MotionType::SCALE:
+			list = (vector<Motion::Unit>*) & MotionStatus::CurrentMotion()->scale;
+			break;
+		case MotionType::OPACITY:
+			list = (vector<Motion::Unit>*) & MotionStatus::CurrentMotion()->opacity;
+			break;
+		}
+		if (list) {
+			for (int i = 0; i < list->size(); i++) {
+				if (&(list->at(i)) != this) {
+					if ((list->at(i).begin_frame <= this->begin_frame && list->at(i).end_frame > this->begin_frame)) {
+						this->begin_frame = list->at(i).end_frame;
+						this->end_frame = this->begin_frame + 1;
+					}
+					if ((list->at(i).begin_frame < this->end_frame && list->at(i).end_frame >= this->end_frame)) {
+						this->begin_frame = list->at(i).end_frame;
+						this->end_frame = this->begin_frame + 1;
+					}
+				}
+			}
+		}
+	}
+}
